@@ -603,6 +603,156 @@
       .text-toggle:active {
         transform: translateX(-50%) scale(0.97);
       }
+
+      .contact-button {
+        display: block;
+        margin: 30px auto 0;
+        padding: 11px 30px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fff;
+        color: #564746;
+        font-family: inherit;
+        font-size: 0.92rem;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        box-shadow: 0 8px 22px rgba(36, 24, 24, 0.05);
+        transition: background 0.2s ease;
+      }
+
+      .contact-button:hover {
+        background: #faf6f3;
+      }
+
+      .contact-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      .contact-modal[hidden] {
+        display: none;
+      }
+
+      .contact-modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 16, 16, 0.5);
+      }
+
+      .contact-modal-panel {
+        position: relative;
+        width: min(380px, 100%);
+        max-height: 86vh;
+        background: #fff;
+        border-radius: 18px;
+        padding: 26px 22px 4px;
+        box-shadow: 0 24px 60px rgba(20, 14, 14, 0.28);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .contact-modal-close {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        font-size: 1.5rem;
+        color: #564746;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .contact-modal-title {
+        margin: 0 0 14px;
+        text-align: center;
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: #3b322f;
+      }
+
+      .contact-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        flex: 1 1 auto;
+        min-height: 0;
+      }
+
+      .contact-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      .contact-modal-scroll-hint {
+        flex: 0 0 auto;
+        padding: 6px 0 10px;
+        text-align: center;
+        color: #b9aca7;
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .contact-modal-scroll-hint svg {
+        display: inline-block;
+      }
+
+      .contact-modal-scroll-hint.is-hidden {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .contact-item {
+        padding: 14px 0;
+      }
+
+      .contact-name {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #564746;
+        margin-bottom: 12px;
+      }
+
+      .contact-name strong {
+        font-weight: 700;
+        color: #2e2727;
+      }
+
+      .contact-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .contact-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 12px 8px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: #564746;
+        background: #fff;
+        text-decoration: none;
+      }
+
+      .contact-action:hover {
+        background: #faf6f3;
+      }
     </style>
   </head>
   <body>
@@ -643,7 +793,7 @@
               <div class="photo-fill">Groom</div>
             </div>
             <div class="person-role">신랑</div>
-            <div class="person-name">창원</div>
+            <div class="person-name">이창원</div>
             <div class="person-family">
               아버지 이형복<br />
               어머니 박순영
@@ -654,13 +804,15 @@
               <div class="photo-fill">Bride</div>
             </div>
             <div class="person-role">신부</div>
-            <div class="person-name">민정</div>
+            <div class="person-name">고민정</div>
             <div class="person-family">
               아버지 고용준<br />
               어머니 정수경
             </div>
           </article>
         </div>
+
+        <button type="button" class="contact-button" id="open-contacts">연락처</button>
       </section>
 
       <section class="wedding-day">
@@ -760,7 +912,7 @@
         <small class="section-title" style="font-size: 1rem; margin-bottom: 20px; display: block">Location</small>
         <div class="location-text">
           서울 영등포구 문래로 164 SK리더스뷰<br />
-          JK아트컨벤션 4층 아크리움홀
+          JK아트컨벤션 4층 아트리움홀
         </div>
 
         <div
@@ -825,6 +977,164 @@
       <footer class="footer">창원과 민정의 소중한 날에 함께해 주셔서 감사합니다.</footer>
     </main>
     <button type="button" class="text-toggle" id="text-toggle" aria-pressed="false">큰 글자로 보기</button>
+
+    <div
+      class="contact-modal"
+      id="contact-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-modal-title"
+      hidden
+    >
+      <div class="contact-modal-backdrop" data-close></div>
+      <div class="contact-modal-panel">
+        <button class="contact-modal-close" type="button" data-close aria-label="닫기">×</button>
+        <h2 class="contact-modal-title" id="contact-modal-title">연락처</h2>
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="contact-name">신랑 <strong>이창원</strong></div>
+            <div class="contact-actions">
+              <a class="contact-action" href="tel:01089422847">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.58l2.2-2.21c.28-.27.36-.66.25-1.01C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"
+                  />
+                </svg>
+                전화하기
+              </a>
+              <a class="contact-action" href="sms:01089422847">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  />
+                </svg>
+                문자보내기
+              </a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-name">신랑 아버지 <strong>이형복</strong></div>
+            <div class="contact-actions">
+              <a class="contact-action" href="tel:01000000000">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.58l2.2-2.21c.28-.27.36-.66.25-1.01C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"
+                  />
+                </svg>
+                전화하기
+              </a>
+              <a class="contact-action" href="sms:01000000000">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  />
+                </svg>
+                문자보내기
+              </a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-name">신랑 어머니 <strong>박순영</strong></div>
+            <div class="contact-actions">
+              <a class="contact-action" href="tel:01000000000">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.58l2.2-2.21c.28-.27.36-.66.25-1.01C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"
+                  />
+                </svg>
+                전화하기
+              </a>
+              <a class="contact-action" href="sms:01000000000">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  />
+                </svg>
+                문자보내기
+              </a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-name">신부 <strong>고민정</strong></div>
+            <div class="contact-actions">
+              <a class="contact-action" href="tel:01024121631">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.58l2.2-2.21c.28-.27.36-.66.25-1.01C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"
+                  />
+                </svg>
+                전화하기
+              </a>
+              <a class="contact-action" href="sms:01024121631">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  />
+                </svg>
+                문자보내기
+              </a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-name">신부 아버지 <strong>고용준</strong></div>
+            <div class="contact-actions">
+              <a class="contact-action" href="tel:01089352612">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.58l2.2-2.21c.28-.27.36-.66.25-1.01C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"
+                  />
+                </svg>
+                전화하기
+              </a>
+              <a class="contact-action" href="sms:01089352612">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  />
+                </svg>
+                문자보내기
+              </a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-name">신부 어머니 <strong>정수경</strong></div>
+            <div class="contact-actions">
+              <a class="contact-action" href="tel:01047082612">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.58l2.2-2.21c.28-.27.36-.66.25-1.01C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"
+                  />
+                </svg>
+                전화하기
+              </a>
+              <a class="contact-action" href="sms:01047082612">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  />
+                </svg>
+                문자보내기
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-modal-scroll-hint" id="contact-modal-scroll-hint" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+    </div>
+
     <script>
       (function () {
         const KAKAO_MAP_APP_KEY = "ace1b1cca224ccb3b77375d4bd66140c";
@@ -1014,10 +1324,59 @@
           });
         }
 
+        function initContactModal() {
+          const openBtn = document.getElementById("open-contacts");
+          const modal = document.getElementById("contact-modal");
+          const list = modal && modal.querySelector(".contact-list");
+          const hint = document.getElementById("contact-modal-scroll-hint");
+          if (!openBtn || !modal) {
+            return;
+          }
+
+          function updateHint() {
+            if (!list || !hint) return;
+            const atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 4;
+            const noOverflow = list.scrollHeight <= list.clientHeight + 1;
+            hint.classList.toggle("is-hidden", atBottom || noOverflow);
+          }
+
+          function open() {
+            modal.hidden = false;
+            document.body.style.overflow = "hidden";
+            window.requestAnimationFrame(updateHint);
+          }
+
+          function close() {
+            modal.hidden = true;
+            document.body.style.overflow = "";
+          }
+
+          openBtn.addEventListener("click", open);
+
+          modal.addEventListener("click", function (event) {
+            const target = event.target.closest("[data-close]");
+            if (target) {
+              close();
+            }
+          });
+
+          document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !modal.hidden) {
+              close();
+            }
+          });
+
+          if (list) {
+            list.addEventListener("scroll", updateHint, { passive: true });
+            window.addEventListener("resize", updateHint);
+          }
+        }
+
         renderCountdown();
         window.setInterval(renderCountdown, 1000);
         initKakaoMap();
         initTextToggle();
+        initContactModal();
       })();
     </script>
   </body>
