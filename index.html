@@ -604,6 +604,68 @@
         transform: translateX(-50%) scale(0.97);
       }
 
+      .float-actions {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        opacity: 50%;
+      }
+
+      .float-action {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(46, 39, 39, 0.82);
+        color: #fffdfc;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        box-shadow: 0 8px 22px rgba(28, 18, 18, 0.22);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease;
+      }
+
+      .float-action:hover {
+        background: rgba(46, 39, 39, 0.94);
+      }
+
+      .float-action:active {
+        transform: scale(0.94);
+      }
+
+      .float-toast {
+        position: fixed;
+        right: 18px;
+        bottom: 78px;
+        z-index: 1001;
+        padding: 8px 14px;
+        background: rgba(46, 39, 39, 0.94);
+        color: #fffdfc;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        box-shadow: 0 8px 22px rgba(28, 18, 18, 0.22);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(6px);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .float-toast.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
       .contact-button {
         display: block;
         margin: 30px auto 0;
@@ -778,7 +840,6 @@
         border: none;
         font-family: inherit;
         font-size: 0.95rem;
-        color: var(--accent);
         cursor: pointer;
         letter-spacing: 0.04em;
       }
@@ -1026,8 +1087,8 @@
           따뜻한 마음에 깊이 감사드립니다.
         </p>
 
-        <div class="account-group" data-open="true">
-          <button class="account-group-toggle" type="button" aria-expanded="true">
+        <div class="account-group" data-open="false">
+          <button class="account-group-toggle" type="button" aria-expanded="false">
             <span>신랑측</span>
             <svg
               class="chevron"
@@ -1072,8 +1133,8 @@
           </div>
         </div>
 
-        <div class="account-group" data-open="true">
-          <button class="account-group-toggle" type="button" aria-expanded="true">
+        <div class="account-group" data-open="false">
+          <button class="account-group-toggle" type="button" aria-expanded="false">
             <span>신부측</span>
             <svg
               class="chevron"
@@ -1188,6 +1249,42 @@
       <footer class="footer">창원과 민정의 소중한 날에 함께해 주셔서 감사합니다.</footer>
     </main>
     <button type="button" class="text-toggle" id="text-toggle" aria-pressed="false">큰 글자로 보기</button>
+
+    <div class="float-actions">
+      <button type="button" class="float-action" id="scroll-top" aria-label="맨 위로">
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+      </button>
+      <button type="button" class="float-action" id="share-page" aria-label="공유하기">
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+          <polyline points="16 6 12 2 8 6"></polyline>
+          <line x1="12" y1="2" x2="12" y2="15"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="float-toast" id="float-toast" role="status" aria-live="polite"></div>
 
     <div
       class="contact-modal"
@@ -1636,12 +1733,78 @@
           });
         }
 
+        function showToast(message) {
+          const toast = document.getElementById("float-toast");
+          if (!toast) return;
+          toast.textContent = message;
+          toast.classList.add("is-visible");
+          window.clearTimeout(showToast._timer);
+          showToast._timer = window.setTimeout(function () {
+            toast.classList.remove("is-visible");
+          }, 1800);
+        }
+
+        function initFloatActions() {
+          const topBtn = document.getElementById("scroll-top");
+          const shareBtn = document.getElementById("share-page");
+
+          if (topBtn) {
+            topBtn.addEventListener("click", function () {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+          }
+
+          if (shareBtn) {
+            shareBtn.addEventListener("click", function () {
+              const shareData = {
+                title: "이창원♡고민정 결혼합니다",
+                text: "2026년 8월 23일 일요일 오전 11시 JK아트컨벤션",
+                url: window.location.href,
+              };
+
+              if (navigator.share) {
+                navigator.share(shareData).catch(function () {
+                  /* user cancelled */
+                });
+                return;
+              }
+
+              const url = window.location.href;
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard
+                  .writeText(url)
+                  .then(function () {
+                    showToast("링크가 복사되었습니다");
+                  })
+                  .catch(function () {
+                    showToast("복사에 실패했어요");
+                  });
+              } else {
+                const ta = document.createElement("textarea");
+                ta.value = url;
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                  document.execCommand("copy");
+                  showToast("링크가 복사되었습니다");
+                } catch (e) {
+                  showToast("복사에 실패했어요");
+                }
+                document.body.removeChild(ta);
+              }
+            });
+          }
+        }
+
         renderCountdown();
         window.setInterval(renderCountdown, 1000);
         initKakaoMap();
         initTextToggle();
         initContactModal();
         initAccountSection();
+        initFloatActions();
       })();
     </script>
   </body>
