@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>창원 & 민정 모바일 청첩장</title>
+    <style>
+      :root {
+        --bg: #f8f5f2;
+        --surface: #ffffff;
+        --text: #2e2727;
+        --muted: #8b7c77;
+        --accent: #f29183;
+        --accent-soft: #fde9e4;
+        --line: rgba(46, 39, 39, 0.08);
+        --shadow: 0 16px 40px rgba(36, 24, 24, 0.08);
+        --hero-height: 100svh;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.9), transparent 28%),
+          linear-gradient(180deg, #fcfaf8 0%, #f7f2ef 100%);
+        color: var(--text);
+        font-family: "Georgia", "Times New Roman", serif;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        width: min(100%, 430px);
+        margin: 0 auto;
+        background: var(--surface);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02);
+      }
+
+      .hero {
+        position: relative;
+        min-height: var(--hero-height);
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(19, 15, 19, 0.14), rgba(19, 15, 19, 0.52)),
+          linear-gradient(160deg, #cbc2c3 0%, #f8f1ef 42%, #c6bcc1 100%);
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.18) 0,
+          rgba(255, 255, 255, 0.18) 1px,
+          transparent 1px,
+          transparent 7px
+        );
+        mix-blend-mode: screen;
+        opacity: 0.5;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        width: 340px;
+        height: 340px;
+        left: 50%;
+        bottom: 88px;
+        transform: translateX(-50%);
+        border-radius: 48% 52% 54% 46% / 42% 40% 60% 58%;
+        background:
+          radial-gradient(circle at 42% 36%, rgba(255, 220, 223, 0.95), transparent 17%),
+          radial-gradient(circle at 58% 33%, rgba(45, 38, 47, 0.96), transparent 15%),
+          radial-gradient(circle at 50% 52%, rgba(16, 16, 18, 0.92), transparent 33%),
+          radial-gradient(circle at 50% 76%, rgba(22, 18, 24, 0.94), transparent 42%),
+          radial-gradient(circle at 50% 50%, rgba(248, 246, 242, 0.16), transparent 60%);
+        filter: blur(0.6px);
+        opacity: 0.95;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        min-height: var(--hero-height);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 42px 22px 48px;
+        text-align: center;
+        color: #fffdfc;
+      }
+
+      .hero-copy {
+        margin-top: 8px;
+      }
+
+      .eyebrow {
+        font-size: 0.95rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.82;
+      }
+
+      .headline {
+        margin: 6px 0 0;
+        font-size: clamp(2.1rem, 5vw, 2.8rem);
+        line-height: 1.05;
+        font-style: italic;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-shadow: 0 3px 14px rgba(0, 0, 0, 0.16);
+      }
+
+      .hero-meta {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-names {
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+      }
+
+      .hero-date {
+        margin-top: 10px;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        opacity: 0.95;
+      }
+
+      .hero-place {
+        margin-top: 6px;
+        font-size: 0.82rem;
+        opacity: 0.76;
+      }
+
+      section {
+        padding: 62px 22px;
+      }
+
+      .section-title {
+        margin: 0 0 28px;
+        text-align: center;
+        color: var(--accent);
+        font-size: 1.75rem;
+        line-height: 0.95;
+        letter-spacing: 0.03em;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .section-title small {
+        display: block;
+        font-size: 0.56em;
+        letter-spacing: 0.28em;
+        margin-bottom: 10px;
+      }
+
+      .photo-card {
+        width: 100%;
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        background: #f1e5dd;
+      }
+
+      .photo-card.large {
+        aspect-ratio: 4 / 3.6;
+      }
+
+      .photo-card.hero-shot {
+        aspect-ratio: 4 / 5.1;
+        border-radius: 18px;
+      }
+
+      .photo-card.small {
+        aspect-ratio: 1 / 1;
+        border-radius: 8px;
+      }
+
+      .photo-fill {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 0.9rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        background:
+          linear-gradient(180deg, rgba(40, 30, 33, 0.08), rgba(40, 30, 33, 0.08)),
+          radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.7), transparent 19%),
+          linear-gradient(135deg, #eeddd5 0%, #bcc9ad 38%, #f8f3ec 62%, #d8c7bf 100%);
+      }
+
+      .intro {
+        padding-top: 74px;
+        text-align: center;
+      }
+
+      .intro-text {
+        margin: 28px auto 0;
+        max-width: 310px;
+        color: #564746;
+        font-size: 0.93rem;
+        line-height: 2;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 12px 0 0;
+        color: var(--muted);
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        width: 34px;
+        height: 1px;
+        background: var(--line);
+      }
+
+      .couple {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .person {
+        text-align: center;
+      }
+
+      .person-role {
+        margin-top: 14px;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      .person-name {
+        margin-top: 6px;
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+      }
+
+      .person-family {
+        margin-top: 10px;
+        color: #6b5f5c;
+        font-size: 0.78rem;
+        line-height: 1.7;
+      }
+
+      .accent-name {
+        color: var(--accent);
+      }
+
+      .wedding-day {
+        text-align: center;
+        background: linear-gradient(180deg, rgba(253, 233, 228, 0.26), transparent 28%), var(--surface);
+      }
+
+      .wedding-day .lead {
+        margin: 0;
+        font-size: 1.28rem;
+        letter-spacing: 0.03em;
+      }
+
+      .wedding-day .venue {
+        margin-top: 10px;
+        color: #5f5551;
+        font-size: 1rem;
+      }
+
+      .calendar {
+        margin: 34px auto 0;
+        width: 100%;
+        max-width: 330px;
+      }
+
+      .calendar-header,
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+      }
+
+      .calendar-header {
+        margin-bottom: 16px;
+        color: #7b6f6b;
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+      }
+
+      .calendar-grid {
+        row-gap: 12px;
+        font-size: 0.9rem;
+      }
+
+      .sun {
+        color: #ff6f61;
+      }
+
+      .heart-day {
+        width: 28px;
+        height: 28px;
+        margin: 0 auto;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #ff6f61;
+        font-weight: 700;
+        border: 1px solid rgba(255, 111, 97, 0.22);
+        background: rgba(255, 111, 97, 0.05);
+      }
+
+      .countdown {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        max-width: 340px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .count-box {
+        background: linear-gradient(180deg, #ffffff, #f4f0ee);
+        border: 1px solid rgba(46, 39, 39, 0.08);
+        box-shadow: 0 10px 24px rgba(26, 20, 18, 0.05);
+        padding: 12px 6px;
+      }
+
+      .count-label {
+        color: var(--accent);
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .count-value {
+        margin-top: 8px;
+        font-size: 1.7rem;
+        line-height: 1;
+      }
+
+      .gallery-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .thumb {
+        aspect-ratio: 1 / 1;
+        border-radius: 0;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.42), transparent 18%),
+          linear-gradient(135deg, #d7d4c6, #9ba883 34%, #f1e6dd 68%, #d8c8c8);
+      }
+
+      .gallery-focus {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        aspect-ratio: 4 / 5;
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.42), transparent 18%),
+          linear-gradient(135deg, #cfd6c4, #f7efe8 35%, #aeb693 68%, #f2ddd4);
+      }
+
+      .gallery-focus::before,
+      .gallery-focus::after {
+        content: "‹";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 1.4rem;
+        color: rgba(70, 60, 56, 0.55);
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(4px);
+      }
+
+      .gallery-focus::before {
+        left: 10px;
+      }
+
+      .gallery-focus::after {
+        right: 10px;
+        content: "›";
+      }
+
+      .location-text {
+        text-align: center;
+        line-height: 1.9;
+        color: #574c49;
+        font-size: 1rem;
+      }
+
+      .map-card {
+        margin-top: 26px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(46, 39, 39, 0.08);
+        background: #f6f2eb;
+        height: 240px;
+        position: relative;
+      }
+
+      #kakao-map {
+        width: 100%;
+        height: 100%;
+      }
+
+      .map-road-x,
+      .map-road-y,
+      .map-pin {
+        display: none;
+      }
+
+      .map-fallback {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+        line-height: 1.7;
+        color: #6d625f;
+        background:
+          linear-gradient(90deg, transparent 0 46%, rgba(117, 176, 111, 0.14) 46% 54%, transparent 54%),
+          linear-gradient(0deg, transparent 0 46%, rgba(244, 140, 126, 0.14) 46% 54%, transparent 54%),
+          linear-gradient(135deg, #f6f2eb 0%, #fcfbf8 100%);
+      }
+
+      .map-fallback p {
+        margin: 0;
+      }
+
+      .map-fallback strong {
+        display: grid;
+        gap: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #3b322f;
+      }
+
+      .map-actions {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .map-action {
+        border-radius: 12px;
+        border: 1px solid rgba(46, 39, 39, 0.08);
+        padding: 14px 8px;
+        text-align: center;
+        font-size: 0.86rem;
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(36, 24, 24, 0.04);
+      }
+
+      .traffic {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+
+      .traffic-item {
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .traffic-title {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .traffic-copy {
+        color: #665a57;
+        font-size: 0.9rem;
+        line-height: 1.8;
+      }
+
+      .footer {
+        padding: 34px 22px 46px;
+        text-align: center;
+        color: #8f7e79;
+        font-size: 0.8rem;
+        background: linear-gradient(180deg, transparent, rgba(242, 145, 131, 0.05));
+      }
+
+      @media (max-width: 360px) {
+        .hero-inner {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+
+        section {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+
+        .headline {
+          font-size: 1.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <div class="eyebrow">Together Forever</div>
+            <h1 class="headline">We are getting<br />married</h1>
+          </div>
+          <div class="hero-meta">
+            <div class="hero-names">이창원 &amp; 고민정</div>
+            <div class="hero-date">2026.08.23 일요일 오전 11:00</div>
+            <div class="hero-place">JK아트컨벤션 4층 아트리움홀</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro">
+        <h2 class="section-title">Wedding<br />Invitation</h2>
+        <div class="photo-card large">
+          <div class="photo-fill">Main Photo</div>
+        </div>
+        <p class="intro-text">
+          한 번 뿐이라는 말에 변치 않기를,<br />
+          시선이 머무는 곳에 늘 사랑이 남기를 바랍니다.<br />
+          좋은 꿈, 닮은 웃음으로 함께하기로 한 서로를<br />
+          따뜻한 마음으로 지켜봐 주시면 감사드립니다.
+        </p>
+      </section>
+
+      <div class="divider">༄</div>
+
+      <section>
+        <div class="couple">
+          <article class="person">
+            <div class="photo-card small">
+              <div class="photo-fill">Groom</div>
+            </div>
+            <div class="person-role">신랑</div>
+            <div class="person-name"><span class="accent-name">창</span>원</div>
+            <div class="person-family">
+              아버지 이형복<br />
+              어머니 박순영
+            </div>
+          </article>
+          <article class="person">
+            <div class="photo-card small">
+              <div class="photo-fill">Bride</div>
+            </div>
+            <div class="person-role">신부</div>
+            <div class="person-name"><span class="accent-name">민</span>정</div>
+            <div class="person-family">
+              아버지 고용준<br />
+              어머니 정수경
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="wedding-day">
+        <small class="section-title" style="font-size: 1rem; margin-bottom: 18px; display: block">Wedding Day</small>
+        <p class="lead">2026.08.23 일요일 오전 11:00</p>
+        <div class="venue">JK아트컨벤션 4층 아트리움홀</div>
+
+        <div class="calendar">
+          <div class="calendar-header">
+            <div class="sun">일</div>
+            <div>월</div>
+            <div>화</div>
+            <div>수</div>
+            <div>목</div>
+            <div>금</div>
+            <div>토</div>
+          </div>
+          <div class="calendar-grid">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div>1</div>
+            <div class="sun">2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>8</div>
+            <div class="sun">9</div>
+            <div>10</div>
+            <div>11</div>
+            <div>12</div>
+            <div>13</div>
+            <div>14</div>
+            <div>15</div>
+            <div class="sun">16</div>
+            <div>17</div>
+            <div>18</div>
+            <div>19</div>
+            <div>20</div>
+            <div>21</div>
+            <div>22</div>
+            <div><span class="heart-day">23</span></div>
+            <div>24</div>
+            <div>25</div>
+            <div>26</div>
+            <div>27</div>
+            <div>28</div>
+            <div>29</div>
+            <div class="sun">30</div>
+            <div>31</div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+
+        <div class="countdown" aria-label="countdown" aria-live="polite">
+          <div class="count-box">
+            <div class="count-label">Days</div>
+            <div class="count-value" id="countdown-days">00</div>
+          </div>
+          <div class="count-box">
+            <div class="count-label">Hour</div>
+            <div class="count-value" id="countdown-hours">00</div>
+          </div>
+          <div class="count-box">
+            <div class="count-label">Min</div>
+            <div class="count-value" id="countdown-minutes">00</div>
+          </div>
+          <div class="count-box">
+            <div class="count-label">Sec</div>
+            <div class="count-value" id="countdown-seconds">00</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <small class="section-title" style="font-size: 1rem; margin-bottom: 20px; display: block">Gallery</small>
+        <div class="gallery-strip">
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+        </div>
+        <div class="gallery-focus"></div>
+      </section>
+
+      <section>
+        <small class="section-title" style="font-size: 1rem; margin-bottom: 20px; display: block">Location</small>
+        <div class="location-text">
+          서울 영등포구 문래로 164 SK리더스뷰<br />
+          JK아트컨벤션 4층 아크리움홀
+        </div>
+
+        <div
+          class="map-card"
+          id="kakao-map-card"
+          data-address="서울 영등포구 문래로 164 SK리더스뷰 4층 JK아트컨벤션"
+          aria-label="카카오 지도"
+        >
+          <div id="kakao-map"></div>
+          <div class="map-fallback" id="kakao-map-fallback">
+            <p>
+              <strong>카카오 지도</strong>
+            </p>
+          </div>
+          <div class="map-road-x one"></div>
+          <div class="map-road-x two"></div>
+          <div class="map-road-x three"></div>
+          <div class="map-road-y one"></div>
+          <div class="map-road-y two"></div>
+          <div class="map-road-y three"></div>
+          <div class="map-pin">웨딩홀</div>
+        </div>
+
+        <div class="map-actions">
+          <a class="map-action" href="#" aria-label="네이버 지도">네이버</a>
+          <a class="map-action" href="#" aria-label="티맵">T MAP</a>
+          <a class="map-action" href="#" aria-label="카카오맵">카카오</a>
+        </div>
+
+        <div class="traffic">
+          <div class="traffic-item">
+            <div class="traffic-title">버스</div>
+            <div class="traffic-copy">• 문래역 : 6211번, 6625번, 영등포12번</div>
+            <div class="traffic-copy">• 문래주민센터, 영일시장 : 영등포05번</div>
+            <div class="traffic-copy">• 벽산메가트리움ART : 6216번</div>
+          </div>
+          <div class="traffic-item">
+            <div class="traffic-title">지하철</div>
+            <div class="traffic-copy">2호선 문래역 하차</div>
+            <div class="traffic-copy">• 도보: 5번 출구에서 전방 직진 300M</div>
+            <div class="traffic-copy">• 셔틀버스: 4번 출구(뒷쪽) 5분 마다 셔틀버스 운행</div>
+          </div>
+          <div class="traffic-item">
+            <div class="traffic-title">자가용</div>
+            <div class="traffic-copy">• 네비게이션 : " JK아트컨벤션" 또는 문래동 SK리더스뷰" 입력</div>
+            <div class="traffic-copy">
+              • 주소 : "서울 영등포구 문래로 164" 또는 "서울 영등포구 문래동 3가 55-16 입력
+            </div>
+          </div>
+          <div class="traffic-item">
+            <div class="traffic-title">주차 정보</div>
+            <div class="traffic-copy">• 주차: 2시간 무료주차(외부 주차장 동일)</div>
+            <div class="traffic-copy">• 주차등록: 4층 중앙로비 엘리베이터 앞 안내데스크</div>
+            <br />
+            <div class="traffic-copy">
+              * 웨딩홀 건물 만차 시 안내에 따라 도보 5분거리에 위치해있는 외부 주차장을 안내 받으실 수 있습니다.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">창원과 민정의 소중한 날에 함께해 주셔서 감사합니다.</footer>
+    </main>
+    <script>
+      (function () {
+        const KAKAO_MAP_APP_KEY = "ace1b1cca224ccb3b77375d4bd66140c";
+        const targetDate = new Date("2026-08-23T11:00:00+09:00");
+        const dayNode = document.getElementById("countdown-days");
+        const hourNode = document.getElementById("countdown-hours");
+        const minuteNode = document.getElementById("countdown-minutes");
+        const secondNode = document.getElementById("countdown-seconds");
+        const mapCard = document.getElementById("kakao-map-card");
+        const mapNode = document.getElementById("kakao-map");
+        const mapFallback = document.getElementById("kakao-map-fallback");
+
+        if (!dayNode || !hourNode || !minuteNode || !secondNode) {
+          return;
+        }
+
+        function pad(value) {
+          return String(value).padStart(2, "0");
+        }
+
+        function renderCountdown() {
+          const now = new Date();
+          const diff = targetDate.getTime() - now.getTime();
+
+          if (diff <= 0) {
+            dayNode.textContent = "00";
+            hourNode.textContent = "00";
+            minuteNode.textContent = "00";
+            secondNode.textContent = "00";
+            return;
+          }
+
+          const totalSeconds = Math.floor(diff / 1000);
+          const days = Math.floor(totalSeconds / 86400);
+          const hours = Math.floor((totalSeconds % 86400) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+
+          dayNode.textContent = pad(days);
+          hourNode.textContent = pad(hours);
+          minuteNode.textContent = pad(minutes);
+          secondNode.textContent = pad(seconds);
+        }
+
+        function showMapFallback(message) {
+          if (!mapFallback) {
+            return;
+          }
+
+          const currentOrigin = window.location.origin === "null" ? "file://" : window.location.origin;
+          mapFallback.innerHTML =
+            "<p><strong>카카오 지도 준비 중</strong>" +
+            message +
+            '<br><small style="display:block;margin-top:8px;color:#8b7c77;">현재 origin: ' +
+            currentOrigin +
+            "</small></p>";
+          mapFallback.hidden = false;
+        }
+
+        function loadKakaoMapSdk() {
+          return new Promise((resolve, reject) => {
+            if (window.kakao && window.kakao.maps) {
+              resolve();
+              return;
+            }
+
+            const script = document.createElement("script");
+            const sdkUrl =
+              "https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&libraries=services&appkey=" +
+              encodeURIComponent(KAKAO_MAP_APP_KEY);
+            script.src = sdkUrl;
+            script.onload = function () {
+              if (!window.kakao || !window.kakao.maps) {
+                reject(new Error("SDK loaded but kakao.maps is unavailable"));
+                return;
+              }
+
+              window.kakao.maps.load(resolve);
+            };
+            script.onerror = function () {
+              reject(new Error("SDK request failed: " + sdkUrl));
+            };
+            document.head.appendChild(script);
+          });
+        }
+
+        function setupMapActions(lat, lng, address) {
+          const placeName = "JK아트컨벤션";
+          const encodedName = encodeURIComponent(placeName);
+
+          const actions = document.querySelectorAll(".map-action");
+          actions.forEach((action) => {
+            const label = action.getAttribute("aria-label");
+            if (label === "네이버 지도") {
+              action.href = "https://map.naver.com/p/search/" + encodedName;
+              action.target = "_blank";
+              action.rel = "noopener noreferrer";
+            } else if (label === "티맵") {
+              action.href = "tmap://route?goalname=" + encodedName + "&goalx=" + lng + "&goaly=" + lat;
+            } else if (label === "카카오맵") {
+              action.href = "https://map.kakao.com/link/map/" + encodedName + "," + lat + "," + lng;
+              action.target = "_blank";
+              action.rel = "noopener noreferrer";
+            }
+          });
+        }
+
+        function initKakaoMap() {
+          if (!mapCard || !mapNode || !mapFallback) {
+            return;
+          }
+
+          if (!KAKAO_MAP_APP_KEY || KAKAO_MAP_APP_KEY === "YOUR_KAKAO_JAVASCRIPT_KEY") {
+            showMapFallback("`KAKAO_MAP_APP_KEY`를 실제 JavaScript 키로 바꿔주세요.");
+            return;
+          }
+
+          loadKakaoMapSdk()
+            .then(() => {
+              const address = mapCard.dataset.address;
+              const geocoder = new window.kakao.maps.services.Geocoder();
+
+              geocoder.addressSearch(address, function (result, status) {
+                if (status !== window.kakao.maps.services.Status.OK || !result[0]) {
+                  showMapFallback("주소 검색에 실패했습니다. 주소 또는 앱 키를 확인해 주세요.");
+                  return;
+                }
+
+                const lat = result[0].y;
+                const lng = result[0].x;
+                const position = new window.kakao.maps.LatLng(lat, lng);
+                const map = new window.kakao.maps.Map(mapNode, {
+                  center: position,
+                  level: 3,
+                });
+
+                new window.kakao.maps.Marker({
+                  map: map,
+                  position: position,
+                });
+
+                setupMapActions(lat, lng, address);
+
+                mapFallback.hidden = true;
+              });
+            })
+            .catch((error) => {
+              showMapFallback(
+                "SDK 로드에 실패했습니다.<br>" +
+                  (error && error.message ? error.message : "Unknown error") +
+                  "<br>앱 키, 도메인 등록, 브라우저 확장 프로그램 차단 여부를 확인해 주세요.",
+              );
+            });
+        }
+
+        renderCountdown();
+        window.setInterval(renderCountdown, 1000);
+        initKakaoMap();
+      })();
+    </script>
+  </body>
+</html>
